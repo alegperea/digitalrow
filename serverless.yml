@@ -1,0 +1,420 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: push-notifications-api
+app: myapp
+org: alegperea
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+frameworkVersion: '2'
+provider:
+  name: aws
+  runtime: go1.x
+  region: us-east-1
+  memorySize: 1024
+  stage: dev
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - s3:PutObject
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem              
+      Resource:
+          - "arn:aws:dynamodb:*:*:*"
+  # you can define service wide environment variables here
+
+   
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  notificationBucketName: "pushnotification"  
+  tableName: 'agpFilaDigital-${opt:stage, self:provider.stage}' 
+   
+  smsQueueName: notification-queue-sms
+  #snsTopicName: 'FilaDigitalSNS-${opt:stage, self:provider.stage}'
+  sqsEmailName: FilaDigitalEmailSQS
+  sqsSMSlName: FilaDigitalSMSSQS
+
+  dynamodb:
+    start:
+      migrate: true
+
+  #go-build:
+    # Example where we start "serverless-dynalite" prior to testing
+    #testPlugins:
+    #  - dynalite:start
+    # Run tests defined in endpoints module/folder
+    #tests:
+    #  - ./endpoints
+
+
+#  domains:
+#    prod: api.forecasting.agp.com
+#    dev: dev-api.forecasting.agp.com
+#  customDomain:
+#    domainName: ${self:custom.domains.${self:custom.stage}}
+  #  basePath: 'v1'
+#    stage: ${self:provider.stage}
+#    certificateName: forecasting.agp.com
+#    createRoute53Record: true
+  serverless-offline:
+    useDocker: true
+  allowedHeaders:
+    - Accept
+    - Content-Type
+    - Content-Length
+    - Authorization
+
+   
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+
+
+package:
+ exclude:
+   - ./**
+ include:
+   - ./bin/**
+   - ./jwt/**
+   - .env
+
+functions:
+  
+    ######### User / Login Routes ##########
+
+  LoginHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-login
+    timeout: 120
+    events:
+      - http:
+          path: /login
+          method: post
+          cors: true
+
+
+  LogoutHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-logout
+    timeout: 120
+    events:
+      - http:
+          path: /v1/logout
+          method: post
+          cors: true
+
+  
+  refresh_token:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-refresh
+    timeout: 120
+    events:
+      - http:
+          path: /v1/refresh_token
+          method: get
+          cors: true
+
+
+  ######### Company ##########
+  
+  CompaniesHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-companies
+    timeout: 120
+    events:
+      - http:
+          path: /v1/companies
+          method: get
+
+  CompanyByIDHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-company-by-id
+    timeout: 120
+    events:
+      - http:
+          path: /v1/company/{id}
+          method: get
+
+
+  CreateCompanyHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-create-company
+    timeout: 120
+    events:
+      - http:
+          path: /company
+          method: post
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  UpdateCompanyHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-update-company
+    timeout: 120
+    events:
+      - http:
+          path: /v1/company
+          method: put
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  DeleteCompanyHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-delete-company
+    timeout: 120
+    events:
+      - http:
+          path: /v1/company/{id}
+          method: delete
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+    
+  ######### Commerce ##########
+  
+  CommercesHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-commerces
+    timeout: 120
+    events:
+      - http:
+          path: /v1/commerces
+          method: get
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  CommerceByIDHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-commerce-by-id
+    timeout: 120
+    events:
+      - http:
+          path: /v1/commerce/{id}
+          method: get
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+
+  CreateCommerceHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-create-commerce
+    timeout: 120
+    events:
+      - http:
+          path: /v1/commerce
+          method: post
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  UpdateCommerceHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-update-commerce
+    timeout: 120
+    events:
+      - http:
+          path: /v1/commerce
+          method: put
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  DeleteCommerceHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-delete-commerce
+    timeout: 120
+    events:
+      - http:
+          path: /v1/commerce/{id}
+          method: delete
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+
+  
+  ######### Customers ##########
+  
+  CustomersHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-customers
+    timeout: 120
+    events:
+      - http:
+          path: /v1/customers
+          method: get
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  CustomersByCommerceHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-customers-by-commerce
+    timeout: 120
+    events:
+      - http:
+          path: /v1/customers/{commerceid}
+          method: get
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+
+  CreateCustomerHandler:
+    handler: bin/api
+    name: notifications-api-${self:provider.stage}-create-customer
+    timeout: 120
+    events:
+      - http:
+          path: /v1/customer/commerceid
+          method: post
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+
+  ######### Swagger API DOCS ##########
+
+  swaggers:
+    handler: bin/api
+    name: notification-api-${self:provider.stage}-swagger
+    timeout: 120
+    events:
+      - http:
+          path: /swagger/{proxy+}
+          method: ANY
+          cors:
+            - enabled: true
+            - origin: '*'
+            - headers: 'Content-Type,X-PINGOTHER'
+            - methods: '*'
+
+  ######### Send mail function ##########
+
+  sendMail:
+    handler: bin/sendmail
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [ SQSQueue, Arn ] 
+
+
+resources:
+  Resources: 
+    SQSQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: ${self:custom.sqsEmailName}-queue
+
+#    SNSTopic:
+#      Type: 'AWS::SNS::Topic'
+#      Properties:
+#        DisplayName: ${self:custom.snsTopicName}
+#        TopicName: ${self:custom.snsTopicName}
+
+#    SNSSubscription:
+#      Type: 'AWS::SNS::Subscription'
+#      Properties:
+#        TopicArn: {"Ref": "SNSTopic"}
+#        Endpoint: filadigital@agp.com
+#        Protocol: email
+
+
+    PushNotificationDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: UUID
+            AttributeType: S     
+          - AttributeName: UserData
+            AttributeType: S
+          - AttributeName: Email
+            AttributeType: S               
+        KeySchema:
+          - AttributeName: UUID
+            KeyType: HASH
+          - AttributeName: UserData
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+        - IndexName: Email-Index
+          KeySchema:
+          - AttributeName: Email
+            KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+    
+                
+plugins:
+  - serverless-offline
+#  - serverless-go-build
+#  - serverless-domain-manager
+  - serverless-plugin-include-dependencies

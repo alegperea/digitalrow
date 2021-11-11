@@ -1,0 +1,29 @@
+image: avcosystems/golang-node
+
+stages:
+  - deploy
+
+dev_deploy:
+  stage: deploy
+  only:
+    - develop
+  before_script:
+    - npm config set prefix /usr/local
+    - npm install -g serverless
+  script:
+    - make
+    - serverless config credentials --provider aws --key $FD_AWS_ACCESS_KEY_ID --secret $FD_AWS_SECRET_ACCESS_KEY
+    - serverless deploy --stage dev --verbose
+  environment: dev_deploy
+
+prod_deploy:
+  stage: deploy
+  only:
+    - master
+  before_script:
+    - npm config set prefix /usr/local
+    - npm install -g serverless
+  script:
+    - serverless config credentials --provider aws --key $FD_AWS_ACCESS_KEY_ID --secret $FD_AWS_SECRET_ACCESS_KEY
+    - serverless deploy --stage prod 
+  environment: prod_deploy

@@ -1,0 +1,582 @@
+definitions:
+  entity.Commerce:
+    properties:
+      Address:
+        type: string
+      Capacity:
+        type: integer
+      Customers:
+        items:
+          $ref: '#/definitions/entity.Customer'
+        type: array
+      Email:
+        type: string
+      Name:
+        type: string
+      Phone:
+        type: string
+      QRCode:
+        type: string
+    type: object
+  entity.Company:
+    properties:
+      CUIT:
+        type: string
+      CompanyName:
+        type: string
+      Email:
+        type: string
+      FirstName:
+        type: string
+      LastName:
+        type: string
+      Logo:
+        type: string
+      Password:
+        type: string
+      Phone:
+        type: string
+      Subscription:
+        type: string
+    type: object
+  entity.Customer:
+    properties:
+      CustomerID:
+        type: string
+      Diners:
+        type: integer
+      NotificationType:
+        type: string
+      Phone:
+        type: string
+    type: object
+  httputil.HTTPError:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/commerce:
+    post:
+      consumes:
+      - application/json
+      description: add by json Commerce
+      parameters:
+      - description: Add Commerce
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Commerce'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Create Commerce
+      tags:
+      - Commerce
+  /v1/commerce/:id:
+    delete:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Delete Commerce
+      tags:
+      - Commerce
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+              type: string
+            Content-Type:
+              description: application/json
+              type: string
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Commerce by ID
+      tags:
+      - Commerce
+    put:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: Update Commerce
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Commerce'
+      - description: Commerce ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+              type: string
+            Content-Type:
+              description: application/json
+              type: string
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Update Commerce
+      tags:
+      - Commerce
+  /v1/commerces:
+    get:
+      consumes:
+      - application/json
+      description: add by json commerce
+      parameters:
+      - description: List commerces
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Commerce'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: List Commerce
+      tags:
+      - Commerce
+  /v1/companies:
+    get:
+      consumes:
+      - application/json
+      description: add by json dataset
+      parameters:
+      - description: List companies
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Company'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: List Companies
+      tags:
+      - Company
+  /v1/company:
+    post:
+      consumes:
+      - application/json
+      description: add by json company
+      parameters:
+      - description: Add company
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Company'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Create Company
+      tags:
+      - Company
+  /v1/company/:id:
+    delete:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/entity.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Delete Company
+      tags:
+      - Company
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+              type: string
+            Content-Type:
+              description: application/json
+              type: string
+          schema:
+            $ref: '#/definitions/entity.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Company by ID
+      tags:
+      - Company
+    put:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: Update company
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Company'
+      - description: company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+              type: string
+            Content-Type:
+              description: application/json
+              type: string
+          schema:
+            $ref: '#/definitions/entity.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Update Company
+      tags:
+      - Company
+  /v1/customer/:commerceid:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+              type: string
+            Content-Type:
+              description: application/json
+              type: string
+          schema:
+            $ref: '#/definitions/entity.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Customer by ID
+      tags:
+      - Customer
+    post:
+      consumes:
+      - application/json
+      description: add by json customer
+      parameters:
+      - description: Add customer
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Create Customer
+      tags:
+      - Customer
+  /v1/customer/:id:
+    delete:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/entity.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Delete Customer
+      tags:
+      - Customer
+    put:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: Update customer
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Customer'
+      - description: customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Authorization:
+              description: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
+              type: string
+            Content-Type:
+              description: application/json
+              type: string
+          schema:
+            $ref: '#/definitions/entity.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Update Customer
+      tags:
+      - Customer
+  /v1/customers:
+    get:
+      consumes:
+      - application/json
+      description: add by json dataset
+      parameters:
+      - description: List customers
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Commerce'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: List Customers
+      tags:
+      - Customer
+swagger: "2.0"
